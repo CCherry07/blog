@@ -1,4 +1,5 @@
 import { SparklesIcon } from "@heroicons/react/24/solid";
+import { Input } from "./Input";
 
 interface FeedProps {
 
@@ -14,6 +15,7 @@ export function Feed(props: FeedProps) {
           <SparklesIcon className="h-5 text-black dark:text-white" />
         </div>
        </div>
+       <Input/>
     </div>
   )
 }  
