@@ -1,12 +1,15 @@
 import Head from 'next/head'
 import { Feed } from '../components/Feed'
 import { Sidebar } from '../components/Sidebar'
-import { getProviders , getSession } from 'next-auth/react';
+import { getProviders , getSession ,useSession} from 'next-auth/react';
+import Login from '../components/Login';
+import axios from 'axios';
 // import { useDark } from '../hooks/useDark'
-
-export default function Home() {
-  // const [theme, toggle] = useDark()
-  // console.log(theme);
+export default function Home({ trendingResults, followResults, providers }) {
+  const {data:Session} = useSession()
+  // if (!Session) return <Login providers={providers} />
+  console.log(Session);
+  
   return (
     <div className='dark text-black dark:text-white'>
       <Head>
@@ -23,21 +26,62 @@ export default function Home() {
 }
 
 export async function getServerSideProps(context: any) {
-  const trendingResults = await fetch("https://jsonkeeper.com/b/NKEV").then(
-    (res) => res.json()
-  );
-  const followResults = await fetch("https://jsonkeeper.com/b/WWMJ").then(
-    (res) => res.json()
-  );
+  const res1 = [
+    {
+      "heading": "T20 World Cup 2021 · LIVE",
+      "description": "NZvAUS: New Zealand and Australia clash in the T20 World Cup final",
+      "img": "https://rb.gy/d9yjtu",
+      "tags": [
+        "#T20WorldCupFinal, ",
+        "Kane Williamson"
+      ]
+    },
+    {
+      "heading": "Trending in United Arab Emirates",
+      "description": "#earthquake",
+      "img": "https://rb.gy/jvuy4v",
+      "tags": [
+        "#DubaiAirshow, ",
+        "#gessdubai"
+      ]
+    },
+    {
+      "heading": "Trending in Digital Creators",
+      "description": "tubbo and quackity",
+      "img": "",
+      "tags": [
+        "QUACKITY AND TUBBO,"
+      ]
+    }
+  ]
+  const trendingResults = res1
+  const res2 = [
+    {
+      "userImg": "https://rb.gy/urakiy",
+      "username": "SpaceX",
+      "tag": "@SpaceX"
+    },
+    {
+      "userImg": "https://rb.gy/aluxgh",
+      "username": "Elon Musk",
+      "tag": "@elonmusk"
+    },
+    {
+      "userImg": "https://rb.gy/zyvazm",
+      "username": "Tesla",
+      "tag": "@Tesla"
+    }
+  ]
+  const followResults = res2
   const providers = await getProviders();
-  const session = await getSession(context);
+  // const session = await getSession(context);
  
   return {
     props: {
       trendingResults,
       followResults,
       providers,
-      session,
+      // session,
     },
   };
 }

@@ -72,7 +72,11 @@ export function Input() {
   })
 
   return (
-    <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll ${loading && "opacity-60"}`}>
+    <div
+      className={`border-b border-gray-700 p-3 flex space-x-3 ${loading && "opacity-60"
+        }`}
+      style={{ scrollbarWidth:"none"}}
+    >
       <img className="h-11 w-11 rounded-full cursor-pointer" 
           src={"https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c"} 
           alt="" />
@@ -140,7 +144,7 @@ export function Input() {
             onClick={sendPost}
           disabled={!input.trim() && !selectedFile}>Tweet</button>
         </div>
-
+              
       </div>
     </div>
   )
