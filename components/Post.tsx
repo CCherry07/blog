@@ -4,7 +4,7 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import Moment from 'react-moment'
-import { useRecoilState, RecoilRoot } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { PostState } from '../atoms/midalAtom'
 import { session } from '../config/session'
 import { db } from '../firebase'
@@ -17,12 +17,20 @@ interface PostProps {
 function Post(props: PostProps) {
   const { post, id: _id, postPage } = props
   // const { data: session } = useSession()
+
   const [id, setPostId] = useState(_id)
   const [isOpen, setIsOpen] = useRecoilState(PostState)
   const [comments, setComments] = useState([])
+  const [likes, setLikes] = useState([])
+  const [liked, setLiked] = useState(false)
   const router = useRouter()
   function handleCardClick() {
     router.push(`/${id}`)
+  }
+
+  // network
+  function likePost() {
+
   }
   return (
     <div className='p-3 flex cursor-pointer border-b border-gray-700' onClick={handleCardClick}>
@@ -84,7 +92,7 @@ function Post(props: PostProps) {
               className="flex items-center space-x-1 group"
               onClick={(e) => {
                 e.stopPropagation();
-                deleteDoc(doc(db, "posts",id));
+                deleteDoc(doc(db, "posts", id));
                 router.push("/");
               }}
             >
@@ -100,7 +108,7 @@ function Post(props: PostProps) {
             </div>
           )}
 
-          {/* <div
+          <div
             className="flex items-center space-x-1 group"
             onClick={(e) => {
               e.stopPropagation();
@@ -122,7 +130,7 @@ function Post(props: PostProps) {
                 {likes.length}
               </span>
             )}
-          </div> */}
+          </div>
 
           <div className="icon group">
             <ShareIcon className="h-5 group-hover:text-[#1d9bf0]" />
