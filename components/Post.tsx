@@ -1,8 +1,8 @@
 import { ChartBarIcon, ChatBubbleLeftEllipsisIcon, EllipsisHorizontalIcon, HeartIcon, ArrowsRightLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
-import { deleteDoc, doc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore'
 // import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { useRecoilState } from 'recoil';
 import { PostState } from '../atoms/midalAtom'
@@ -21,7 +21,7 @@ function Post(props: PostProps) {
   const [id, setPostId] = useState(_id)
   const [isOpen, setIsOpen] = useRecoilState(PostState)
   const [comments, setComments] = useState([])
-  const [likes, setLikes] = useState([])
+  const [likes, setLikes] = useState<any>([])
   const [liked, setLiked] = useState(false)
   const router = useRouter()
   function handleCardClick() {
@@ -29,9 +29,28 @@ function Post(props: PostProps) {
   }
 
   // network
-  function likePost() {
-
+  async function likePost() {
+    if (liked) {
+      await deleteDoc(
+        doc(db, "posts", id, "likes", session.user.uid)
+      )
+    } else {
+      await setDoc(doc(db, 'posts', id, "likes", session.user.uid), {
+        username: session.user.name
+      })
+    }
   }
+
+  useEffect(() => {
+    onSnapshot(collection(db, "posts", id, 'likes'), (snapshot) => {
+      setLikes(snapshot.docs)
+    })
+  }, [db, id])
+
+  useEffect(() => {
+    setLiked(likes.findIndex((like: any) => like?.id === session.user.uid) !== -1)
+  }, [likes])
+
   return (
     <div className='p-3 flex cursor-pointer border-b border-gray-700' onClick={handleCardClick}>
       {!postPage && <img src={post?.userImg} alt="logo" className='h-11 w-11 rounded-full mr-4' />}
