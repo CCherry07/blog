@@ -448,7 +448,7 @@
 
 "@heroicons/react@^2.0.12":
   version "2.0.12"
-  resolved "https://repo.huaweicloud.com/repository/npm/@heroicons/react/-/react-2.0.12.tgz"
+  resolved "https://repo.huaweicloud.com/repository/npm/@heroicons/react/-/react-2.0.12.tgz#7e5a16c82512f89a30266dd36f8b8465b3e3e216"
   integrity sha512-FZxKh3i9aKIDxyALTgIpSF2t6V6/eZfF5mRu41QlwkX3Oxzecdm1u6dpft6PQGxIBwO7TKYWaMAYYL8mp/EaOg==
 
 "@humanwhocodes/config-array@^0.11.6":
@@ -1135,6 +1135,11 @@ electron-to-chromium@^1.4.251:
   version "1.4.284"
   resolved "https://repo.huaweicloud.com/repository/npm/electron-to-chromium/-/electron-to-chromium-1.4.284.tgz"
   integrity sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==
+
+emoji-mart@^5.2.2:
+  version "5.2.2"
+  resolved "https://repo.huaweicloud.com/repository/npm/emoji-mart/-/emoji-mart-5.2.2.tgz#1c093ffc19554dd6edfcfeec9aca43ff38bcc16e"
+  integrity sha512-BvcrX+Ps9MxSVEjnvxupclU3MBD6WVC4WZOY26csfC6oFdaWpFhdrzeVNVBmCLPOmzY1SE0aAsqZJRNVbZ1yhQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
