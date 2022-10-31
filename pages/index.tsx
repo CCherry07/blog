@@ -1,11 +1,12 @@
 import Head from 'next/head'
 import { Feed } from '../components/Feed'
 import { Sidebar } from '../components/Sidebar'
-import { getProviders , getSession ,useSession} from 'next-auth/react';
+import { getProviders , getSession} from 'next-auth/react';
 import Login from '../components/Login';
+import { session } from '../config/session';
 // import axios from 'axios';
 // import { useDark } from '../hooks/useDark'
-export default function Home({ trendingResults, followResults, providers, session }) {
+export default function Home({ providers }:any) {
   // const {data:Session} = useSession()
   if (!session) return <Login providers={providers} />
   return (

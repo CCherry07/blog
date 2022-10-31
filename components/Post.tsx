@@ -10,7 +10,7 @@ import { session } from '../config/session'
 import { db } from '../firebase'
 interface PostProps {
   key: string | number
-  id: string | number
+  id: string
   post: any,
   postPage: any
 }
@@ -84,7 +84,7 @@ function Post(props: PostProps) {
               className="flex items-center space-x-1 group"
               onClick={(e) => {
                 e.stopPropagation();
-                deleteDoc(doc(db, "posts", id));
+                deleteDoc(doc(db, "posts",id));
                 router.push("/");
               }}
             >
