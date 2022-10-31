@@ -61,7 +61,7 @@ function Post(props: PostProps) {
           )}
           <div className='text-[#6e767d]'>
             <div className='inline-block group'>
-              <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${!postPage && "inline-block"}`}>{post.username}</h4>
+              <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${!postPage && "inline-block"}`}>{post?.username}</h4>
               <span className={`text-sm sm:text-[15px] ${!postPage && 'ml-1.5'}`}>@{post?.tag}</span>
             </div>
             .{" "}
@@ -83,7 +83,7 @@ function Post(props: PostProps) {
             {post?.text}
           </p>
         )}
-        <img src={post.image} alt="" className='rounded-2xl max-h-[700px] object-cover mr-2' />
+        <img src={post?.image} alt="" className='rounded-2xl max-h-[700px] object-cover mr-2' />
         <div
           className={`text-[#6e767d] flex justify-between w-10/12 ${postPage && "mx-auto"
             }`}
