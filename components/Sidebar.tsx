@@ -11,7 +11,8 @@ import {
 import LOGO from '../assets/logo.svg'
 import { SideBarLink } from "./SideBarLink"
 import Image from 'next/image'
-export const Sidebar = () => {
+import { session } from "../config/session";
+export const Sidebar = () => { 
   return (
     <div className="hidden sm:flex flex-col items-center xl:items-start xl:w-[340px] p-2 fixed h-full">
       <div className="flex items-center justify-center w-14 h-14 hoverAnimation p-0 xl:ml-24">
@@ -32,8 +33,8 @@ export const Sidebar = () => {
       <div className="text-[#d9d9d9] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto">
         <img className="h-10 w-10 rounded-full xl:mr-2.5" src={"https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c"} alt="" />
         <div className="hidden xl:inline leading-5">
-          <h4 className="font-bold">cherry</h4>
-          <p className="text-[#6e767d] text-sm">c_chenjunguang.163.com</p>
+          <h4 className="font-bold">{session.user.name}</h4>
+          <p className="text-[#6e767d] text-sm">{session.user.email}</p>
         </div>
         <EllipsisHorizontalIcon className="h-5 hidden xl:inline ml-1"/>
         </div>

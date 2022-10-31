@@ -3,13 +3,11 @@ import { Feed } from '../components/Feed'
 import { Sidebar } from '../components/Sidebar'
 import { getProviders , getSession ,useSession} from 'next-auth/react';
 import Login from '../components/Login';
-import axios from 'axios';
+// import axios from 'axios';
 // import { useDark } from '../hooks/useDark'
-export default function Home({ trendingResults, followResults, providers }) {
-  const {data:Session} = useSession()
-  // if (!Session) return <Login providers={providers} />
-  console.log(Session);
-  
+export default function Home({ trendingResults, followResults, providers, session }) {
+  // const {data:Session} = useSession()
+  if (!session) return <Login providers={providers} />
   return (
     <div className='dark text-black dark:text-white'>
       <Head>
@@ -74,14 +72,21 @@ export async function getServerSideProps(context: any) {
   ]
   const followResults = res2
   const providers = await getProviders();
-  // const session = await getSession(context);
+  const session = await getSession(context) || {
+    user: {
+      uid: "2405693142",
+      name: "cherry",
+      image: "https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c",
+      tag: "CHERRY"
+    }
+  };
  
   return {
     props: {
       trendingResults,
       followResults,
       providers,
-      // session,
+      session,
     },
   };
 }

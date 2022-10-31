@@ -1,56 +1,62 @@
-import { ChartBarIcon, ChatBubbleLeftEllipsisIcon,EllipsisHorizontalIcon, HeartIcon, ArrowsRightLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { ChartBarIcon, ChatBubbleLeftEllipsisIcon, EllipsisHorizontalIcon, HeartIcon, ArrowsRightLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { deleteDoc, doc } from 'firebase/firestore'
-import { useSession } from 'next-auth/react'
-import router from 'next/router'
+// import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-// import Moment from 'react-moment'
-import { useRecoilState } from 'recoil';
+import Moment from 'react-moment'
+import { useRecoilState, RecoilRoot } from 'recoil';
+import { PostState } from '../atoms/midalAtom'
+import { session } from '../config/session'
 import { db } from '../firebase'
-interface PostProps{
-  key:string|number
+interface PostProps {
+  key: string | number
   id: string | number
-  post:any,
-  postPage:any
+  post: any,
+  postPage: any
 }
 function Post(props: PostProps) {
-  const { post , id:_id ,postPage} = props
+  const { post, id: _id, postPage } = props
+  // const { data: session } = useSession()
   const [id, setPostId] = useState(_id)
-  const [isOpen,setIsOpen] = useState(false)
-  const {data:session} = useSession()
-  console.log(post);
+  const [isOpen, setIsOpen] = useRecoilState(PostState)
+  const [comments, setComments] = useState([])
+  const router = useRouter()
+  function handleCardClick() {
+    router.push(`/${id}`)
+  }
   return (
-    <div className='p-3 flex cursor-pointer border-b border-gray-700'>
-      {!postPage && <img src={post?.userImg} alt="logo" className='h-11 w-11 rounded-full mr-4' /> }
+    <div className='p-3 flex cursor-pointer border-b border-gray-700' onClick={handleCardClick}>
+      {!postPage && <img src={post?.userImg} alt="logo" className='h-11 w-11 rounded-full mr-4' />}
       <div className='flex flex-col space-y-2 w-full'>
         <div className={`flex ${!postPage && "justify-between"}`}>
-            {postPage&&(
-              <img src={post?.userImg} className="h-11 w-11 rounded-full mr-4" />
-            )}
-            <div className='text-[#6e767d]'>
-              <div className='inline-block group'>
-                <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${!postPage && "inline-block"}`}>{post.username}</h4>
-                <span className={`text-sm sm:text-[15px] ${!postPage && 'ml-1.5'}`}>@{post?.tag}</span>
-              </div>
-              .{" "}
-              <span className='hover:underline text-sm sm:text-[15px]'>
-                {/* <Moment fromNow>{ post?.timestamp?.toDate()}</Moment> */}
-              </span>
-              {
-                !postPage && <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
-                  {post?.text}
-                </p>
-              }
+          {postPage && (
+            <img src={post?.userImg} className="h-11 w-11 rounded-full mr-4" />
+          )}
+          <div className='text-[#6e767d]'>
+            <div className='inline-block group'>
+              <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${!postPage && "inline-block"}`}>{post.username}</h4>
+              <span className={`text-sm sm:text-[15px] ${!postPage && 'ml-1.5'}`}>@{post?.tag}</span>
             </div>
-            <div className='icon group flex-shrink-0 ml-auto'>
-              <EllipsisHorizontalIcon className='h-5 text-[#6e767d] group-hover:text-[#1d9bf0]'></EllipsisHorizontalIcon>
-            </div>
+            .{" "}
+            <span className='hover:underline text-sm sm:text-[15px]'>
+              <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
+            </span>
+            {
+              !postPage && <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
+                {post?.text}
+              </p>
+            }
+          </div>
+          <div className='icon group flex-shrink-0 ml-auto'>
+            <EllipsisHorizontalIcon className='h-5 text-[#6e767d] group-hover:text-[#1d9bf0]'></EllipsisHorizontalIcon>
+          </div>
         </div>
         {postPage && (
           <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
             {post?.text}
           </p>
         )}
-        <img src={post.image} alt="" className='rounded-2xl max-h-[700px] object-cover mr-2'/>
+        <img src={post.image} alt="" className='rounded-2xl max-h-[700px] object-cover mr-2' />
         <div
           className={`text-[#6e767d] flex justify-between w-10/12 ${postPage && "mx-auto"
             }`}
@@ -66,14 +72,14 @@ function Post(props: PostProps) {
             <div className="icon group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
               <ChatBubbleLeftEllipsisIcon className="h-5 group-hover:text-[#1d9bf0]" />
             </div>
-            {/* {comments.length > 0 && (
+            {comments.length > 0 && (
               <span className="group-hover:text-[#1d9bf0] text-sm">
                 {comments.length}
               </span>
-            )} */}
+            )}
           </div>
 
-          {session?.user?.uid === post?.id ? (
+          {session.user.uid === post?.id ? (
             <div
               className="flex items-center space-x-1 group"
               onClick={(e) => {
@@ -89,7 +95,7 @@ function Post(props: PostProps) {
           ) : (
             <div className="flex items-center space-x-1 group">
               <div className="icon group-hover:bg-green-500/10">
-                  <ArrowsRightLeftIcon className="h-5 group-hover:text-green-500" />
+                <ArrowsRightLeftIcon className="h-5 group-hover:text-green-500" />
               </div>
             </div>
           )}
