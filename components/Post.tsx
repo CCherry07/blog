@@ -12,12 +12,11 @@ interface PostProps {
   key: string | number
   id: string
   post: any,
-  postPage: any
+  postPage?: any
 }
 function Post(props: PostProps) {
   const { post, id: _id, postPage } = props
   // const { data: session } = useSession()
-
   const [id, setPostId] = useState(_id)
   const [isOpen, setIsOpen] = useRecoilState(PostState)
   const [comments, setComments] = useState([])
