@@ -23,7 +23,7 @@ export default function Home({ providers }: any) {
       <main className='bg-white dark:bg-black min-h-screen flex max-w-[1500px] mx-auto'>
         <Sidebar></Sidebar>
         <Feed></Feed>
-        {isOpen && <Modal />}
+        <Modal />
       </main>
     </div>
   )

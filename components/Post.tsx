@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { useRecoilState } from 'recoil';
-import { modalState } from '../atoms/midalAtom'
+import { modalState, postIdState } from '../atoms/midalAtom'
 import { session } from '../config/session'
 import { db } from '../firebase'
 interface PostProps {
@@ -15,10 +15,11 @@ interface PostProps {
   postPage?: any
 }
 function Post(props: PostProps) {
-  const { post, id: _id, postPage } = props
+  const { post, id, postPage } = props
   // const { data: session } = useSession()
-  const [id, setPostId] = useState(_id)
+  // const [id,] = useState(_id)
   const [isOpen, setIsOpen] = useRecoilState(modalState)
+  const [postId, setPostId] = useRecoilState(postIdState);
   const [comments, setComments] = useState([])
   const [likes, setLikes] = useState<any>([])
   const [liked, setLiked] = useState(false)
