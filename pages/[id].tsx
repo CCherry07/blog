@@ -7,8 +7,9 @@ import { Sidebar } from '../components/Sidebar'
 import Post from '../components/Post'
 import Modal from '../components/Modal';
 import { modalState } from '../atoms/midalAtom';
-import { doc, DocumentData, onSnapshot } from 'firebase/firestore';
+import { collection, doc, DocumentData, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
+import Comment from "../components/Comment"
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 export default function PostPage({ providers }: any) {
   // const {data:Session} = useSession()
@@ -16,6 +17,15 @@ export default function PostPage({ providers }: any) {
   const { id } = router.query
   const [isOpen,] = useRecoilState(modalState);
   const [post, setPost] = useState<DocumentData>()
+  const [comments, setComments] = useState([])
+  useEffect(() => {
+    return onSnapshot(
+      query(collection(db, "posts", id as string, "comments"), orderBy("timestamp", "desc")),
+      (snapshot: any) => {
+        setComments(snapshot.docs)
+      }
+    )
+  }, [db, id])
   useEffect(() => onSnapshot(doc(db, "posts", id as string), (snapshot) => {
     setPost(snapshot.data())
   }), [db])
@@ -40,6 +50,17 @@ export default function PostPage({ providers }: any) {
             Tweet
           </div>
           <Post key={id as string} id={id as string} post={post} postPage />
+          {
+            comments.length > 0 && (
+              <div className='pb-72'>
+                {
+                  comments.map(comment => {
+                    return <Comment key={comment.id} comment={comment.data()} id={comment.id} />
+                  })
+                }
+              </div>
+            )
+          }
         </div>
         {isOpen && <Modal />}
       </main>

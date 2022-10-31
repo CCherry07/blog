@@ -41,8 +41,6 @@ function Modal() {
     )
   }, [db, postId])
 
-  console.log(comments);
-
   useEffect(
     () =>
       onSnapshot(doc(db, "posts", postId as string), (snapshot) => {
@@ -53,7 +51,6 @@ function Modal() {
 
   const sendComment = async (e: any) => {
     e.preventDefault();
-
     await addDoc(collection(db, "posts", postId, "comments"), {
       comment: comment,
       username: session.user.name,
@@ -61,10 +58,8 @@ function Modal() {
       userImg: session.user.image,
       timestamp: serverTimestamp(),
     });
-
     setIsOpen(false);
     setComment("");
-
     router.push(`/${postId}`);
   };
 
