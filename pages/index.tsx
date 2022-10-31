@@ -4,10 +4,14 @@ import { Sidebar } from '../components/Sidebar'
 import { getProviders, getSession } from 'next-auth/react';
 import Login from '../components/Login';
 import { session } from '../config/session';
+import Modal from '../components/Modal';
+import { useRecoilState } from 'recoil';
+import { modalState } from '../atoms/midalAtom';
 // import axios from 'axios';
 // import { useDark } from '../hooks/useDark'
 export default function Home({ providers }: any) {
   // const {data:Session} = useSession()
+  const [isOpen,] = useRecoilState(modalState);
   if (!session) return <Login providers={providers} />
   return (
     <div className='dark text-black dark:text-white'>
@@ -19,6 +23,7 @@ export default function Home({ providers }: any) {
       <main className='bg-white dark:bg-black min-h-screen flex max-w-[1500px] mx-auto'>
         <Sidebar></Sidebar>
         <Feed></Feed>
+        {isOpen && <Modal />}
       </main>
     </div>
   )
