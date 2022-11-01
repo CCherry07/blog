@@ -56,7 +56,4 @@ function Widgets(props: WidgetsProps) {
     </div>
   )
 }
-
-Widgets.propTypes = {}
-
 export default Widgets
