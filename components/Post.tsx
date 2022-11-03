@@ -16,8 +16,6 @@ interface PostProps {
 }
 function Post(props: PostProps) {
   const { post, id, postPage } = props
-  // const { data: session } = useSession()
-  // const [id,] = useState(_id)
   const [isOpen, setIsOpen] = useRecoilState(modalState)
   const [postId, setPostId] = useRecoilState(postIdState);
   const [comments, setComments] = useState([])
