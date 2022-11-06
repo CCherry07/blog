@@ -10,7 +10,6 @@ import {
   serverTimestamp,
 } from "@firebase/firestore";
 import { db } from "../firebase";
-import { useSession } from "next-auth/react";
 import {
   CalendarIcon,
   ChartBarIcon,
@@ -24,7 +23,6 @@ import { session } from "../config/session";
 import { DocumentData, orderBy, query } from "firebase/firestore";
 
 function Modal() {
-  // const { data: session } = useSession();
   const [isOpen, setIsOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
   const [post, setPost] = useState<DocumentData | undefined>();

@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Moment from "react-moment";
 import {
-  ArrowsRightLeftIcon,
-  CalendarIcon,
   ChartBarIcon,
   ChatBubbleLeftEllipsisIcon,
-  FaceSmileIcon,
   HeartIcon,
-  PhotoIcon,
   ShareIcon,
-  TrashIcon,
-  XMarkIcon
 } from "@heroicons/react/24/outline";
 import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
