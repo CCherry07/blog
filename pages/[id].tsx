@@ -15,12 +15,11 @@ import { getProviders } from 'next-auth/react';
 import Widgets from '../components/Widgets';
 export default function PostPage({ trendingResults,
   followResults }: any) {
-  // const {data:Session} = useSession()
   const router = useRouter()
   const { id } = router.query
   const [isOpen,] = useRecoilState(modalState);
   const [post, setPost] = useState<DocumentData>()
-  const [comments, setComments] = useState([])
+  const [comments, setComments] = useState<any>([])
   useEffect(() => {
     return onSnapshot(
       query(collection(db, "posts", id as string, "comments"), orderBy("timestamp", "desc")),
@@ -120,14 +119,10 @@ export async function getServerSideProps(context: any) {
     }
   ]
   const followResults = res2
-  // const providers = await getProviders();
-  // const session = await getSession(context)
   return {
     props: {
       trendingResults,
       followResults,
-      // providers,
-      // session,
     },
   };
 }
