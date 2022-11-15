@@ -56,7 +56,7 @@ export default function PostPage({ trendingResults,
             comments.length > 0 && (
               <div className='pb-72'>
                 {
-                  comments.map(comment => {
+                  comments.map((comment: { id: string; data: () => any; }) => {
                     return <Comment key={comment.id} comment={comment.data()} id={comment.id} />
                   })
                 }
