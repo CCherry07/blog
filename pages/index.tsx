@@ -8,11 +8,8 @@ import Modal from '../components/Modal';
 import { useRecoilState } from 'recoil';
 import { modalState } from '../atoms/midalAtom';
 import Widgets from '../components/Widgets';
-// import axios from 'axios';
-// import { useDark } from '../hooks/useDark'
 export default function Home({ trendingResults,
   followResults, providers }: any) {
-  // const {data:Session} = useSession()
   const [isOpen,] = useRecoilState(modalState);
   if (!session) return <Login providers={providers} />
   return (
@@ -80,14 +77,10 @@ export async function getServerSideProps(context: any) {
     }
   ]
   const followResults = res2
-  const providers = await getProviders();
-  // const session = await getSession(context)
   return {
     props: {
       trendingResults,
       followResults,
-      // providers,
-      // session,
     },
   };
 }
