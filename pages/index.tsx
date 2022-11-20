@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { Feed } from '../components/Feed'
 import { Sidebar } from '../components/Sidebar'
-import { getProviders, getSession } from 'next-auth/react';
 import Login from '../components/Login';
 import { session } from '../config/session';
 import Modal from '../components/Modal';

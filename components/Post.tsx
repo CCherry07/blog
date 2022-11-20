@@ -4,7 +4,7 @@ import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firesto
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
-import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { modalState, postIdState } from '../atoms/midalAtom'
 import { session } from '../config/session'
 import { db } from '../firebase'
@@ -18,7 +18,7 @@ function Post(props: PostProps) {
   const { post, id, postPage } = props
   const setIsOpen = useSetRecoilState(modalState)
   const setPostId = useSetRecoilState(postIdState);
-  const [comments, ] = useState([])
+  const [comments,] = useState([])
   const [likes, setLikes] = useState<any>([])
   const [liked, setLiked] = useState(false)
   const router = useRouter()
