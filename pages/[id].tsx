@@ -11,7 +11,7 @@ import { collection, doc, DocumentData, onSnapshot, orderBy, query } from 'fireb
 import { db } from '../firebase';
 import Comment from "../components/Comment"
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { getProviders } from 'next-auth/react';
+// import { getProviders } from 'next-auth/react';
 import Widgets from '../components/Widgets';
 export default function PostPage({ trendingResults,
   followResults }: any) {
