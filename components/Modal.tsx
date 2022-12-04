@@ -2,6 +2,7 @@ import { useRecoilState } from "recoil";
 import { modalState, postIdState } from "../atoms/midalAtom";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, SetStateAction, useEffect, useState } from "react";
+import Image from 'next/image';
 import {
   onSnapshot,
   doc,
@@ -96,7 +97,7 @@ function Modal() {
                 <div className="w-full">
                   <div className="text-[#6e767d] flex gap-x-3 relative">
                     <span className="w-0.5 h-full z-[-1] absolute left-5 top-11 bg-gray-600"></span>
-                    <img src={post?.userImg} className="h-11 w-11 rounded-full" />
+                    <Image src={post?.userImg} className="h-11 w-11 rounded-full" alt={""} />
                     <div className='text-[#6e767d]'>
                       <div className='inline-block group'>
                         <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline inline-block`}>{post?.username}</h4>
