@@ -1,13 +1,13 @@
 import { useState } from "react"
-import type { MouseEvent } from 'react'
+import type {MouseEvent} from 'react'
 import { useRouter } from "next/router"
 import Image from 'next/image';
 import Logo from '../../assets/logo.svg';
 import { useAuth } from "context/auth-context";
-const LoginForm = () => {
-  const [username, setUsername] = useState('cherry')
-  const [password, setPassword] = useState('cherry')
-  const { login } = useAuth()
+const RegisterForm = () => {
+  const [username, setUsername] = useState<string>()
+  const [password, setPassword] = useState<string>()
+  const { register } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<any>({})
   const router = useRouter()
@@ -15,7 +15,7 @@ const LoginForm = () => {
     e.preventDefault()
     setIsSubmitting(true)
     try {
-      await login({ username, password })
+      await register({ username, password })
       router.push('/')
     } catch (err: any) {
       setErrors(err.message)
@@ -23,9 +23,9 @@ const LoginForm = () => {
       setIsSubmitting(false)
     }
   }
-  const goRegister = (e: MouseEvent<HTMLButtonElement>) => {
+  const goLogin= (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    router.push('/register')
+    router.push('/login')
   }
   return (
     <div className='text-white flex flex-col items-center justify-center space-y-20 pt-40'>
@@ -52,15 +52,15 @@ const LoginForm = () => {
               disabled={isSubmitting}
               className='bg-blue-500 text-white rounded-md p-2 w-1/2'
             >
-              {isSubmitting ? 'Logging...' : 'Login'}
-            </button>
-            <button
-              onClick={goRegister}
-              className='border-2 border-dashed border-blue-500 text-white rounded-md p-2 w-1/2'
-            >
-              Register
+              {isSubmitting ? 'Registering...' : 'Register'}
             </button>
 
+            <button
+              className='border-2 border-dashed border-blue-500 text-white rounded-md p-2 w-1/2'
+              onClick={goLogin}
+            >
+              Login
+            </button>
           </div>
         </form>
       </div>
@@ -68,4 +68,4 @@ const LoginForm = () => {
   )
 }
 
-export default LoginForm
+export default RegisterForm

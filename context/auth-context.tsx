@@ -3,7 +3,6 @@ import * as auth from 'auth-provider'
 import { client } from 'utils/api-client'
 import { useAsync } from 'utils/hooks'
 // import { FullPageSpinner, FullPageErrorFallback } from 'components/lib'
-
 async function getUser() {
   let user = null
 
@@ -11,8 +10,12 @@ async function getUser() {
   if (token) {
     const data = await client('me', { token })
     user = data.user
+  }else{
+    if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+      window.location.assign('/login')
+    }
   }
-
+  
   return user
 }
 

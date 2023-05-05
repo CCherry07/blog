@@ -12,8 +12,13 @@ import LOGO from '../assets/logo.svg'
 import { SideBarLink } from "./SideBarLink"
 import Image from 'next/image'
 import { useAuth } from "context/auth-context";
+import SelectMenus from "./SelectMenus";
+import { useRef, useState } from "react";
+import { useClickTargetOutsite } from "hook/useClickTargetOutsite";
+
 export const Sidebar = () => {
   const { user } = useAuth()
+
   return (
     <div className="hidden sm:flex flex-col items-center xl:items-start xl:w-[340px] p-2 fixed h-full">
       <div className="flex items-center justify-center w-14 h-14 hoverAnimation p-0 xl:ml-24">
@@ -37,7 +42,7 @@ export const Sidebar = () => {
           <h4 className="font-bold">{user?.name}</h4>
           <p className="text-[#6e767d] text-sm">{user?.email}</p>
         </div>
-        <EllipsisHorizontalIcon className="h-5 hidden xl:inline ml-1" />
+        <SelectMenus/>
       </div>
     </div>
   )
