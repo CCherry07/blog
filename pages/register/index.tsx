@@ -13,10 +13,13 @@ const RegisterForm = () => {
   const router = useRouter()
   const handleSubmit = async (e: any) => {
     e.preventDefault()
+    if (!username || !password) {
+      return
+    }
     setIsSubmitting(true)
     try {
-      await register({ username, password })
-      router.push('/')
+       await register({ username, password })
+       router.push('/')
     } catch (err: any) {
       setErrors(err.message)
     } finally {

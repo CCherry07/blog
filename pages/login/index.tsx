@@ -60,7 +60,6 @@ const LoginForm = () => {
             >
               Register
             </button>
-
           </div>
         </form>
       </div>

@@ -71,7 +71,7 @@ export default function handler(
           title: '@ctitle(5, 10)',
           content: '@cparagraph(5, 10)',
           'status|1': ['published', 'draft', 'deleted'],
-          like: '@integer(0, 100)',
+          like: 0,
           'author|1': ['@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname'],
           'comment|1-100': 1,
           'star|1-100': 1,
@@ -89,11 +89,23 @@ export default function handler(
       code: 0,
       msg: '创建成功',
     })
+  } else if (req.method === 'DELETE'){
+    const id = Number(req.body.id)
+    if (deletePostById(id)) {
+      res.status(200).json({
+        code: 0,
+        msg: '删除成功',
+      })
+    } else {
+      res.status(200).json({
+        code: 1,
+        msg: '删除失败',
+      })
+    }
   }
 }
 
 // delete post by id
-
 function deletePostById(id: number): boolean {
   const postIndex = postsData.findIndex(post => post.id === id)
   if (postIndex > -1) {

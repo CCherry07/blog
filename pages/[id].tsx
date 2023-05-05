@@ -49,7 +49,7 @@ export default function PostPage({ trendingResults,
             </div>
             Tweet
           </div>
-          <Post key={id as string} id={id as string} post={post} postPage />
+          <Post key={id as string} id={id as string} post={post} postPage/>
           {
             comments.length > 0 && (
               <div className='pb-72'>
