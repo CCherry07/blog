@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
-
 import { Sidebar } from '../components/Sidebar'
 import Post from '../components/Post'
 import Modal from '../components/Modal';
@@ -16,7 +15,7 @@ export default function PostPage({ trendingResults,
   const router = useRouter()
   const { id } = router.query
   const [isOpen,] = useRecoilState(modalState);
-  const [post, setPost] = useState()
+  const [post, setPost] = useState<any>()
   const [comments, setComments] = useState<any>([])
   const { data, refetch } = usePostSearch(Number(id))
   useEffect(() => {
@@ -75,7 +74,7 @@ export async function getServerSideProps(context: any) {
     {
       "heading": "T20 World Cup 2021 · LIVE",
       "description": "NZvAUS: New Zealand and Australia clash in the T20 World Cup final",
-      "img": "https://rb.gy/d9yjtu",
+      "img": "https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c",
       "tags": [
         "#T20WorldCupFinal, ",
         "Kane Williamson"
@@ -84,7 +83,7 @@ export async function getServerSideProps(context: any) {
     {
       "heading": "Trending in United Arab Emirates",
       "description": "#earthquake",
-      "img": "https://rb.gy/jvuy4v",
+      "img": "https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c",
       "tags": [
         "#DubaiAirshow, ",
         "#gessdubai"
@@ -102,17 +101,17 @@ export async function getServerSideProps(context: any) {
   const trendingResults = res1
   const res2 = [
     {
-      "userImg": "https://rb.gy/urakiy",
+      "userImg": "https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c",
       "username": "SpaceX",
       "tag": "@SpaceX"
     },
     {
-      "userImg": "https://rb.gy/aluxgh",
+      "userImg": "https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c",
       "username": "Elon Musk",
       "tag": "@elonmusk"
     },
     {
-      "userImg": "https://rb.gy/zyvazm",
+      "userImg": "https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c",
       "username": "Tesla",
       "tag": "@Tesla"
     }
@@ -125,4 +124,3 @@ export async function getServerSideProps(context: any) {
     },
   };
 }
-
