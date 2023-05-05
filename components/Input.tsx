@@ -1,64 +1,61 @@
-import { CalendarIcon, ChartBarIcon, FaceSmileIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import { ChangeEvent, useRef, useState } from "react"
+import { CalendarIcon, ChartBarIcon, FaceSmileIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import data from '@emoji-mart/data'
+// @ts-ignore
 import Picker from '@emoji-mart/react'
-import { db, storage } from '../firebase'
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc
-} from '@firebase/firestore'
-import { getDownloadURL, ref, uploadString } from '@firebase/storage'
 import { useClickTargetOutsite } from "../hook/useClickTargetOutsite"
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { session } from "../config/session"
-// import { useSession } from "next-auth/react"
+import { useRecoilValue } from "recoil"
+import { userinfoState } from "atoms/userInfoAtom"
+import { useMutation, useQueryClient } from 'react-query'
 interface InputProps {
 
 }
 
 export function Input() {
   const [input, setInput] = useState("")
+  const userinfo = useRecoilValue(userinfoState)
   const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer>("")
   const [showEmojis, setShowEmojis] = useState(false)
   const filePickerRef = useRef<HTMLInputElement>(null)
   const pickerRef = useRef(null)
-  const [loading, setLoading] = useState(false)
+  const queryClient = useQueryClient()
   const sendPost = async () => {
-    if (loading) return
-    setLoading(true)
-    if (!session) {
+    if (!userinfo) {
       return
     }
-    try {
-      const docRef = await addDoc(collection(db, "posts"), {
-        id: session.user?.uid,
-        username: session.user.name,
-        userImg: session.user.image,
-        tag: session.user.tag,
-        text: input,
-        timestamp: serverTimestamp()
-      })
-      const imageRef = ref(storage, `posts/${docRef.id}/image`)
-      if (selectedFile) {
-        console.log(1);
-        await uploadString(imageRef, selectedFile as string, "data_url").then(async () => {
-          const downloadURL = await getDownloadURL(imageRef)
-          await updateDoc(doc(db, "posts", docRef.id), {
-            image: downloadURL
-          })
-        })
-      }
-    } catch (error) {
-      throw new Error(String(error))
+    const payload = {
+      id: userinfo.id,
+      username: userinfo.name,
+      userImg: userinfo.avatar,
+      // tag: userinfo?.tag,
+      content: input,
+      image: ''
     }
-    setLoading(false)
-    setInput("")
-    setSelectedFile("")
-    setShowEmojis(false)
+    if (selectedFile) {
+      payload.image = selectedFile as string
+      // userInfo.img = selectedFile as string
+    }
+    const res = await window.fetch("/api/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+
+    if (res.ok) {
+      setInput("")
+      setSelectedFile("")
+      setShowEmojis(false)
+    }
   }
+  const { mutate, isLoading } = useMutation(sendPost, {
+    mutationKey: 'posts',
+    onSuccess: () => queryClient.invalidateQueries('posts')
+  })
+
+
   function addImageToPost(e: ChangeEvent<HTMLInputElement>) {
     const reader = new FileReader();
     if (e.target.files?.[0]) {
@@ -82,10 +79,10 @@ export function Input() {
 
   return (
     <div
-      className={`border-b border-gray-700 p-3 flex space-x-3 ${loading && "opacity-60"
-        }`}
+      className={`border-b border-gray-700 p-3 flex space-x-3 ${isLoading && "opacity-60"}`}
       style={{ scrollbarWidth: "none" }}
     >
+
       <img className="h-11 w-11 rounded-full cursor-pointer"
         src={"https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c"}
         alt="" />
@@ -150,7 +147,7 @@ export function Input() {
           )}
           <button className="text-[#d9d9d9] text-md font-bold hidden ml-auto w-20 h-[32px] rounded-full bg-[#1d9bf0] 
         shadow-md hover:bg-[#1a8cd8] xl:inline items-center justify-center disabled:opacity-50 disabled:cursor-default"
-            onClick={sendPost}
+            onClick={() => mutate()}
             disabled={!input.trim() && !selectedFile}>Tweet</button>
         </div>
 

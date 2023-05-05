@@ -1,16 +1,7 @@
 import { useRecoilState } from "recoil";
 import { modalState, postIdState } from "../atoms/midalAtom";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, SetStateAction, useEffect, useState } from "react";
-import Image from 'next/image';
-import {
-  onSnapshot,
-  doc,
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "@firebase/firestore";
-import { db } from "../firebase";
+import { Fragment, useState } from "react";
 import {
   CalendarIcon,
   ChartBarIcon,
@@ -20,47 +11,44 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import Moment from "react-moment";
-import { session } from "../config/session";
-import { DocumentData, orderBy, query } from "firebase/firestore";
+import { usePost } from "utils/posts";
+import { useAuth } from "context/auth-context";
+import { useMutation, useQueryClient } from 'react-query'
 
 function Modal() {
   const [isOpen, setIsOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
-  const [post, setPost] = useState<DocumentData | undefined>();
+  const post = usePost(+postId);
+  const { user } = useAuth()
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState("");
   const router = useRouter();
-
-  useEffect(() => {
-    return onSnapshot(
-      query(collection(db, "posts", postId, "comments"), orderBy("timestamp", "desc")),
-      (snapshot: any) => {
-        setComments(snapshot.docs)
-      }
-    )
-  }, [db, postId])
-
-  useEffect(
-    () =>
-      onSnapshot(doc(db, "posts", postId as string), (snapshot) => {
-        setPost(snapshot.data());
-      }),
-    [db, postId]
-  );
-
+  const queryClient = useQueryClient()
   const sendComment = async (e: any) => {
     e.preventDefault();
-    await addDoc(collection(db, "posts", postId, "comments"), {
+    const payload = {
       comment: comment,
-      username: session.user.name,
-      tag: session.user.tag,
-      userImg: session.user.image,
-      timestamp: serverTimestamp(),
-    });
+      username: user?.name,
+      tag: ["tag"],
+      userImg: user?.avatar,
+      timestamp: new Date().toISOString(),
+    }
+    window.fetch(`/api/posts/${postId}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
     setIsOpen(false);
     setComment("");
     router.push(`/${postId}`);
   };
+
+  const { mutate } = useMutation(sendComment, {
+    mutationKey: ['postSearch', { id: postId }],
+    onSuccess: () => queryClient.invalidateQueries('postSearch')
+  })
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -97,7 +85,7 @@ function Modal() {
                 <div className="w-full">
                   <div className="text-[#6e767d] flex gap-x-3 relative">
                     <span className="w-0.5 h-full z-[-1] absolute left-5 top-11 bg-gray-600"></span>
-                    <Image src={post?.userImg} className="h-11 w-11 rounded-full" alt={""} />
+                    <img src={post?.userImg} className="h-11 w-11 rounded-full" alt={""} />
                     <div className='text-[#6e767d]'>
                       <div className='inline-block group'>
                         <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline inline-block`}>{post?.username}</h4>
@@ -108,12 +96,12 @@ function Modal() {
                         <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
                       </span>
                       <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
-                        {post?.text}
+                        {post?.content}
                       </p>
                     </div>
                   </div>
                   <div className="mt-7 flex space-x-3 w-full">
-                    <img src={session.user.image} alt="" className="h-11 w-11 rounded-full" />
+                    <img src={user.avatar} alt="" className="h-11 w-11 rounded-full" />
                     <div className="flex-grow mt-2">
                       <textarea value={comment} onChange={(e) => setComment(e.target.value)}
                         placeholder="Tweet your reply"
@@ -140,7 +128,7 @@ function Modal() {
                         <button
                           className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
                           type="submit"
-                          onClick={sendComment}
+                          onClick={(e) => mutate(e)}
                           disabled={!comment.trim()}
                         >
                           Reply

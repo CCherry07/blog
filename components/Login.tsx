@@ -1,12 +1,17 @@
 import React from 'react'
-import type { getProviders} from 'next-auth/react'
-import {signIn , signOut} from 'next-auth/react'
 import Image from 'next/image';
 import Logo from '../assets/logo.svg';
+import { useRouter } from "next/router"
 interface LoginProps {
-  providers: ReturnType<typeof getProviders>
 }
-function Login({providers}: LoginProps) {
+function Login() {
+  const router = useRouter()
+  const providers = [
+    { name: 'Email', id: 'email' },
+  ]
+  const signIn = (id: string, callbackUrl: any) => {
+    router.push('/login')
+  }
   return (
     <div className='text-white flex flex-col items-center justify-center space-y-20 pt-40'>
       <Image src={Logo} width={150} height={50} alt="" className="object-contain" />

@@ -6,9 +6,7 @@ import {
   HeartIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
-import { addDoc, collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { session } from '../config/session';
+
 import { useRouter } from 'next/router';
 interface CommentProps {
   key: string,
@@ -21,40 +19,18 @@ function Comment(props: CommentProps) {
   const [likes, setLikes] = useState<any>([])
   const [liked, setLiked] = useState(false)
   async function likePost() {
-    if (liked) {
-      await deleteDoc(
-        doc(db, "posts", id, "likes", session.user.uid)
-      )
-    } else {
-      await setDoc(doc(db, 'posts', id, "likes", session.user.uid), {
-        username: session.user.name
-      })
-    }
+    setLikes([...likes, comment.id])
+    setLiked(true)
   }
 
   useEffect(() => {
-    onSnapshot(collection(db, "posts", id, 'likes'), (snapshot) => {
-      setLikes(snapshot.docs)
-    })
-  }, [db])
-
-  useEffect(() => {
-    setLiked(likes.findIndex((like: any) => like?.id === session.user.uid) !== -1)
+    // setLiked(likes.findIndex((like: any) => like?.id === session.user.uid) !== -1)
   }, [likes])
   const sendComment = async (e: any) => {
     e.preventDefault();
 
-    await addDoc(collection(db, "posts", comment.id, "comments"), {
-      comment: comment,
-      username: session.user.name,
-      tag: session.user.tag,
-      userImg: session.user.image,
-      timestamp: serverTimestamp(),
-    });
-
     // setIsOpen(false);
     // setComment("");
-
     router.push(`/${comment.id}`);
   };
   return (
@@ -68,10 +44,10 @@ function Comment(props: CommentProps) {
           </div>
           {" "}.{" "}
           <span className='hover:underline text-sm sm:text-[15px]'>
-            <Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
+            <Moment fromNow>{comment?.timestamp}</Moment>
           </span>
           <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
-            {comment?.comment}
+            {comment?.content}
           </p>
         </div>
         <div

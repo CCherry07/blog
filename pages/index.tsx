@@ -2,15 +2,21 @@ import Head from 'next/head'
 import { Feed } from '../components/Feed'
 import { Sidebar } from '../components/Sidebar'
 import Login from '../components/Login';
-import { session } from '../config/session';
 import Modal from '../components/Modal';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { modalState } from '../atoms/midalAtom';
 import Widgets from '../components/Widgets';
-export default function Home({ trendingResults,
-  followResults, providers }: any) {
-  const [isOpen,] = useRecoilState(modalState);
-  if (!session) return <Login providers={providers} />
+import { userinfoState } from 'atoms/userInfoAtom';
+interface HomeProps {
+  trendingResults: any,
+  followResults: any,
+}
+export default function Home({ trendingResults,followResults}: HomeProps) {
+  const isOpen = useRecoilValue(modalState);
+  const userinfo = useRecoilValue(userinfoState)
+  if (!userinfo) {
+    return <Login />
+  }
   return (
     <div className='dark text-black dark:text-white'>
       <Head>
