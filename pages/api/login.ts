@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { mock } from 'mockjs';
 import { userList } from './baseData'
-const sleep = (timeout: number) => {
+export const sleep = (timeout: number) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(true)

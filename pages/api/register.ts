@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { mock } from 'mockjs';
 import { userList } from './baseData';
+import { sleep } from './login';
 type Data = {
 
 }
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
@@ -12,6 +13,7 @@ export default function handler(
     res.status(405).end() //Method Not Allowed
     return
   }
+  await sleep(2000)
   const { username, password } = req.body
   if (userList.some(item => item.username === username)) {
     res.status(200).json({
