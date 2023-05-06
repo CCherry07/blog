@@ -7,7 +7,7 @@ import { useClickTargetOutsite } from "../hook/useClickTargetOutsite"
 import { XMarkIcon } from "@heroicons/react/24/solid"
 import { useMutation } from 'react-query'
 import { useAuth } from "context/auth-context"
-import { useAddUpdate } from "utils/posts"
+import { useAddEffect } from "utils/posts"
 import { client } from "utils/api-client"
 
 interface Payload {
@@ -26,7 +26,7 @@ export function Input() {
   const filePickerRef = useRef<HTMLInputElement>(null)
   const pickerRef = useRef(null)
   const sendPost = async (data: Payload) => await client("/posts", { data })
-  const { mutate, isLoading } = useMutation(sendPost, useAddUpdate('posts'))
+  const { mutate, isLoading } = useMutation(sendPost, useAddEffect('posts'))
   function addImageToPost(e: ChangeEvent<HTMLInputElement>) {
     const reader = new FileReader();
     if (e.target.files?.[0]) {

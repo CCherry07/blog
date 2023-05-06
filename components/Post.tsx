@@ -7,7 +7,7 @@ import { useAuth } from 'context/auth-context';
 import { ChartBarIcon, ChatBubbleLeftEllipsisIcon, EllipsisHorizontalIcon, HeartIcon, ArrowsRightLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
 import { modalState, postIdState } from '../atoms/midalAtom'
 import type { Post } from 'pages/api/baseData';
-import { useDeleteUpdate } from 'utils/posts';
+import { useAddEffect, useDeleteEffect } from 'utils/posts';
 import { client } from 'utils/api-client';
 interface PostProps {
   key: string | number
@@ -22,7 +22,7 @@ function Post(props: PostProps) {
       method: 'DELETE',
       data: { id }
     })
-  }, useDeleteUpdate('posts'))
+  }, useDeleteEffect('posts'))
   const setIsOpen = useSetRecoilState(modalState)
   const setPostId = useSetRecoilState(postIdState);
   const { user } = useAuth()

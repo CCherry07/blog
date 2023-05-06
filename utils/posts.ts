@@ -73,14 +73,14 @@ function usePost(postId: number) {
   return data ?? loadingPost
 }
 
-export const useDeleteUpdate = (queryKey: QueryKey) =>
+export const useDeleteEffect = (queryKey: QueryKey) =>
   usePostsConfig(queryKey, (target, old) => old?.filter(item => item.id !== target.id) || [])
-export const useEditUpdate = (queryKey: QueryKey) =>
+export const useEditEffect = (queryKey: QueryKey) =>
   usePostsConfig(queryKey, (target, old) => old?.map(item => item.id === target.id ? {
     ...item
     , ...target
   } : item) || [])
-export const useAddUpdate = (queryKey: QueryKey) => usePostsConfig(queryKey, (target, old) => old ? [...old, target] : [])
+export const useAddEffect = (queryKey: QueryKey) => usePostsConfig(queryKey, (target, old) => old ? [...old, target] : [])
 
 
 function useRefetchPostSearchQuery() {
