@@ -26,6 +26,7 @@ export interface Post {
   userImg?: string
   tag?: string[]
   username?: string,
+  timestamp:string,
   comments: Comment[]
 }
 

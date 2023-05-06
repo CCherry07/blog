@@ -42,7 +42,7 @@ export default function handler(
             img: '@image(200x200, @color, @color, @word)',
             userImg: '@image(200x200, @color, @color, @word)',
             timestamp: '@datetime',
-            tag: ['@tag', '@tag'],
+            tag: ['@name'],
           }]
         }).list
       }]
@@ -56,7 +56,6 @@ export default function handler(
       data: postsData
     })
   } else if (req.method === 'POST') {
-    console.log(req.body);
     postsData.unshift({
       id: postsData.length + 1,
       title: req.body.title,
@@ -66,7 +65,8 @@ export default function handler(
       image: req.body.image,
       username: req.body.username,
       userImg: req.body.userImg,
-      tag: ["live"],
+      tag: ['@name'],
+      timestamp: '@datetime',
       comments: mock({
         'list|10': [{
           'id|+1': 1000,

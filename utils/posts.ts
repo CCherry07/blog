@@ -1,6 +1,6 @@
 import * as React from 'react'
 // @ts-ignore
-import { useQuery, queryCache, useQueryClient, QueryKey } from 'react-query'
+import { useQuery, queryCache, useQueryClient, QueryKey, MutationKey } from 'react-query'
 import { useClient } from 'context/auth-context'
 import type { Client } from './api-client'
 
@@ -22,20 +22,21 @@ const postQueryConfig = {
   cacheTime: 1000 * 60 * 60,
 }
 
-const usePostsConfig = (queryKey: any, callback: (target: any, old?: any[]) => any[]) => {
+const usePostsConfig = (mutationKey: MutationKey, callback: (target: any, old?: any[]) => any[]) => {
   const queryClient = useQueryClient()
   return {
-      async onMutate(target: any) {
-        const previousItems = queryClient.getQueriesData(queryKey)
-        queryClient.setQueryData(queryKey, (old?: any[]) => {
-          return callback(target, old)
-        })
-        return { previousItems }
-      },
-      onError(error: any, newItem: any, context: any) {
-        queryClient.setQueryData(queryKey, (context as { previousItems: any[] }).previousItems)
-      },
-      onSuccess: () => queryClient.invalidateQueries(queryKey),
+    mutationKey,
+    async onMutate(target: any) {
+      const previousItems = queryClient.getQueriesData(mutationKey)
+      queryClient.setQueryData(mutationKey, (old?: any[]) => {
+        return callback(target, old)
+      })
+      return { previousItems }
+    },
+    onError(error: any, newItem: any, context: any) {
+      queryClient.setQueryData(mutationKey, (context as { previousItems: any[] }).previousItems)
+    },
+    onSuccess: () => queryClient.invalidateQueries(mutationKey),
   }
 }
 

@@ -9,9 +9,6 @@ import { useMutation } from 'react-query'
 import { useAuth } from "context/auth-context"
 import { useAddUpdate } from "utils/posts"
 import { client } from "utils/api-client"
-interface InputProps {
-
-}
 
 interface Payload {
   id: number,
@@ -52,9 +49,7 @@ export function Input() {
   })
 
   function fetchPost() {
-    if (!user) {
-      return
-    }
+    if (!user) return
     const payload = {
       id: user.id,
       username: user.name,

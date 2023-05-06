@@ -1,34 +1,28 @@
-import { ChartBarIcon, ChatBubbleLeftEllipsisIcon, EllipsisHorizontalIcon, HeartIcon, ArrowsRightLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import Moment from 'react-moment'
 import { useSetRecoilState } from 'recoil';
-import { modalState, postIdState } from '../atoms/midalAtom'
-import { useAuth } from 'context/auth-context';
-import type { Post } from 'pages/api/baseData';
 import { useQueryClient, useMutation } from 'react-query';
+import { useAuth } from 'context/auth-context';
+import { ChartBarIcon, ChatBubbleLeftEllipsisIcon, EllipsisHorizontalIcon, HeartIcon, ArrowsRightLeftIcon, ShareIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { modalState, postIdState } from '../atoms/midalAtom'
+import type { Post } from 'pages/api/baseData';
+import { useDeleteUpdate } from 'utils/posts';
+import { client } from 'utils/api-client';
 interface PostProps {
   key: string | number
   id: number | string
-  post: any,
+  post: Post,
   postPage?: any
 }
 function Post(props: PostProps) {
   const { post, id, postPage } = props
   const { mutate } = useMutation((id: number) => {
-    return fetch(`/api/posts`, {
+    return client(`/posts`, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id })
+      data: { id }
     })
-  }, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('posts')
-    }
-  })
-  const queryClient = useQueryClient()
+  }, useDeleteUpdate('posts'))
   const setIsOpen = useSetRecoilState(modalState)
   const setPostId = useSetRecoilState(postIdState);
   const { user } = useAuth()
