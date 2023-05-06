@@ -26,7 +26,8 @@ export default async function handler(
       id: mock('@guid'),
       username,
       password,
-      avatar: mock('@image(200x200)'),
+      tag: mock('@name'),
+      avatar: mock('@image(200x200, @color, @color, @word)'),
       token: mock('@guid'),
       email: mock('@email')
     }

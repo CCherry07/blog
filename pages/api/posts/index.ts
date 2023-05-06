@@ -20,19 +20,19 @@ export default function handler(
         ...postsData,
         ...mock({
           'list|10': [{
-            'id|+1': 1,
+            'id|+1': postsData.length,
             title: '@ctitle(5, 10)',
             content: '@cparagraph(5, 10)',
             'status|1': ['published', 'draft', 'deleted'],
             like: '@integer(0, 100)',
-            'author|1': ['@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname'],
+            'author|1': ['@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name'],
             'comment|1-100': 1,
             'star|1-100': 1,
             'view|1-100': 1,
             img: '@image(200x200, @color, @color, @word)',
             userImg: '@image(200x200, @color, @color, @word)',
             timestamp: '@datetime',
-            tag: ['@tag', '@tag'],
+            tag: ['@name'],
             comments: mock({
               'list|10': [{
                 'id|+1': 1,
@@ -40,7 +40,7 @@ export default function handler(
                 content: '@cparagraph(5, 10)',
                 'status|1': ['published', 'draft', 'deleted'],
                 like: '@integer(0, 100)',
-                'author|1': ['@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname'],
+                'author|1': ['@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name'],
                 'comment|1-100': 1,
                 'star|1-100': 1,
                 'view|1-100': 1,
@@ -72,14 +72,14 @@ export default function handler(
           content: '@cparagraph(5, 10)',
           'status|1': ['published', 'draft', 'deleted'],
           like: 0,
-          'author|1': ['@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname', '@cname'],
+          'author|1': ['@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name', '@name'],
           'comment|1-100': 1,
           'star|1-100': 1,
           'view|1-100': 1,
           image: '@image(200x200, @color, @color, @word)',
           userImg: '@image(200x200, @color, @color, @word)',
           timestamp: '@datetime',
-          tag: ['@tag', '@tag'],
+          tag: ['@name'],
         }]
       }).list
     })

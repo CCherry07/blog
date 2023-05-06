@@ -33,6 +33,7 @@ export default async function handler(
         token,
         id: user.id,
         name:user.username,
+        tag:user.tag,
         email: user.email,
         avatar: user.avatar || 'https://avatars.githubusercontent.com/u/24776491?v=4'
       }

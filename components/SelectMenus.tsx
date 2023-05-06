@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction, useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { Transition } from '@headlessui/react'
 import {
   ChartPieIcon,
@@ -9,7 +9,7 @@ import { useClickTargetOutsite } from 'hook/useClickTargetOutsite'
 
 const solutions = [
   { name: 'logout', href: '/login', icon: ChartPieIcon },
-  { name: 'register', href: '/register', icon: CursorArrowRaysIcon },
+  { name: 'register', href: '/login', icon: CursorArrowRaysIcon },
 ]
 export default function SelectMenus() {
   const ref = useRef(null)

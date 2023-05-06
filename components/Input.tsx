@@ -5,36 +5,34 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useClickTargetOutsite } from "../hook/useClickTargetOutsite"
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { useRecoilValue } from "recoil"
-import { userinfoState } from "atoms/userInfoAtom"
 import { useMutation, useQueryClient } from 'react-query'
+import { useAuth } from "context/auth-context"
 interface InputProps {
 
 }
 
 export function Input() {
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
   const [input, setInput] = useState("")
-  const userinfo = useRecoilValue(userinfoState)
   const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer>("")
   const [showEmojis, setShowEmojis] = useState(false)
   const filePickerRef = useRef<HTMLInputElement>(null)
   const pickerRef = useRef(null)
-  const queryClient = useQueryClient()
   const sendPost = async () => {
-    if (!userinfo) {
+    if (!user) {
       return
     }
     const payload = {
-      id: userinfo.id,
-      username: userinfo.name,
-      userImg: userinfo.avatar,
-      // tag: userinfo?.tag,
+      id: user.id,
+      username: user.name,
+      userImg: user.avatar,
+      tag: user?.tag,
       content: input,
       image: ''
     }
     if (selectedFile) {
       payload.image = selectedFile as string
-      // userInfo.img = selectedFile as string
     }
     const res = await window.fetch("/api/posts", {
       method: "POST",
@@ -84,8 +82,8 @@ export function Input() {
     >
 
       <img className="h-11 w-11 rounded-full cursor-pointer"
-        src={"https://img1.baidu.com/it/u=592570905,1313515675&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1667235600&t=c35915a8d34897267688ebc08bcf8c4c"}
-        alt="" />
+        src={user.avatar}
+        alt={user.name} />
       <div className="w-full divide-y divide-gray-700">
         <div className={``}>
           <textarea
