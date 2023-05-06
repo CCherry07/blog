@@ -33,7 +33,7 @@ function Post(props: PostProps) {
   const setPostId = useSetRecoilState(postIdState);
   const { user } = useAuth()
   const [comments,] = useState([])
-  const [likeNum, setLikeLikeNum] = useState<any>(post?.like)
+  const [likeNum, setLikeLikeNum] = useState<number>(post?.like ?? 0)
   const [liked, setLiked] = useState(false)
   const router = useRouter()
   function handleCardClick() {

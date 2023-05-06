@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
 import { modalState, postIdState } from "../atoms/midalAtom";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, MouseEvent, useState } from "react";
 import {
   CalendarIcon,
   ChartBarIcon,
@@ -14,6 +14,7 @@ import Moment from "react-moment";
 import { usePost } from "utils/posts";
 import { useAuth } from "context/auth-context";
 import { useMutation, useQueryClient } from 'react-query'
+import { client } from "utils/api-client";
 
 function Modal() {
   const [isOpen, setIsOpen] = useRecoilState(modalState);
@@ -24,31 +25,30 @@ function Modal() {
   const [comments, setComments] = useState("");
   const router = useRouter();
   const queryClient = useQueryClient()
-  const sendComment = async (e: any) => {
-    e.preventDefault();
-    const payload = {
+  const sendComment = async (data: any) => client(`/posts/${postId}/comments`, { data })
+
+  const { mutate } = useMutation(sendComment, {
+    mutationKey: ['postSearch', { id: postId }],
+    onSuccess: () => queryClient.invalidateQueries('postSearch')
+  })
+  function fetchComment(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    const data = {
       comment: comment,
       username: user?.name,
       tag: ["tag"],
       userImg: user?.avatar,
       timestamp: new Date().toISOString(),
     }
-    window.fetch(`/api/posts/${postId}/comments`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+    mutate(data, {
+      onSuccess({ code }) {
+        if (code !== 0) return
+        setIsOpen(false);
+        setComment("");
+        router.push(`/${postId}`);
+      }
     })
-    setIsOpen(false);
-    setComment("");
-    router.push(`/${postId}`);
-  };
-
-  const { mutate } = useMutation(sendComment, {
-    mutationKey: ['postSearch', { id: postId }],
-    onSuccess: () => queryClient.invalidateQueries('postSearch')
-  })
+  }
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -93,7 +93,7 @@ function Modal() {
                       </div>
                       {" "}.{" "}
                       <span className='hover:underline text-sm sm:text-[15px]'>
-                        <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
+                        <Moment fromNow>{post?.timestamp}</Moment>
                       </span>
                       <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>
                         {post?.content}
@@ -101,7 +101,7 @@ function Modal() {
                     </div>
                   </div>
                   <div className="mt-7 flex space-x-3 w-full">
-                    <img src={user.avatar} alt="" className="h-11 w-11 rounded-full" />
+                    <img src={user?.avatar} alt="" className="h-11 w-11 rounded-full" />
                     <div className="flex-grow mt-2">
                       <textarea value={comment} onChange={(e) => setComment(e.target.value)}
                         placeholder="Tweet your reply"
@@ -128,7 +128,7 @@ function Modal() {
                         <button
                           className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
                           type="submit"
-                          onClick={(e) => mutate(e)}
+                          onClick={fetchComment}
                           disabled={!comment.trim()}
                         >
                           Reply

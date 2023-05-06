@@ -10,22 +10,23 @@ async function getUser() {
   if (token) {
     const data = await client('me', { token })
     user = data.user
-  }else{
+  } else {
     if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
       window.location.assign('/login')
     }
   }
-  
+
   return user
 }
 
 interface AuthContext {
   user: {
-    id: string,
+    id: number,
     name: string,
     token: string
     avatar: string
     email: string
+    tag: string
   },
   login: (form: any) => Promise<any>,
   logout: () => void,
@@ -55,11 +56,11 @@ function AuthProvider(props: any) {
   }, [run])
 
   const login = React.useCallback(
-    (form:auth.LoginParams) => auth.login(form).then(setData),
+    (form: auth.LoginParams) => auth.login(form).then(setData),
     [setData],
   )
   const register = React.useCallback(
-    (form:auth.LoginParams) => auth.register(form).then(setData),
+    (form: auth.LoginParams) => auth.register(form).then(setData),
     [setData],
   )
   const logout = React.useCallback(() => {

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { useQuery, queryCache } from 'react-query'
+// @ts-ignore
+import { useQuery, queryCache, useQueryClient, QueryKey } from 'react-query'
 import { useClient } from 'context/auth-context'
 import type { Client } from './api-client'
 
@@ -19,6 +20,23 @@ const loadingPosts = Array.from({ length: 10 }, (v, index) => ({
 const postQueryConfig = {
   staleTime: 1000 * 60 * 60,
   cacheTime: 1000 * 60 * 60,
+}
+
+const usePostsConfig = (queryKey: any, callback: (target: any, old?: any[]) => any[]) => {
+  const queryClient = useQueryClient()
+  return {
+      async onMutate(target: any) {
+        const previousItems = queryClient.getQueriesData(queryKey)
+        queryClient.setQueryData(queryKey, (old?: any[]) => {
+          return callback(target, old)
+        })
+        return { previousItems }
+      },
+      onError(error: any, newItem: any, context: any) {
+        queryClient.setQueryData(queryKey, (context as { previousItems: any[] }).previousItems)
+      },
+      onSuccess: () => queryClient.invalidateQueries(queryKey),
+  }
 }
 
 const getPostsSearchConfig = (client: Client, id: number) => ({
@@ -53,6 +71,16 @@ function usePost(postId: number) {
   })
   return data ?? loadingPost
 }
+
+export const useDeleteUpdate = (queryKey: QueryKey) =>
+  usePostsConfig(queryKey, (target, old) => old?.filter(item => item.id !== target.id) || [])
+export const useEditUpdate = (queryKey: QueryKey) =>
+  usePostsConfig(queryKey, (target, old) => old?.map(item => item.id === target.id ? {
+    ...item
+    , ...target
+  } : item) || [])
+export const useAddUpdate = (queryKey: QueryKey) => usePostsConfig(queryKey, (target, old) => old ? [...old, target] : [])
+
 
 function useRefetchPostSearchQuery() {
   const client = useClient()

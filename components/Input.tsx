@@ -5,55 +5,31 @@ import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useClickTargetOutsite } from "../hook/useClickTargetOutsite"
 import { XMarkIcon } from "@heroicons/react/24/solid"
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import { useAuth } from "context/auth-context"
+import { useAddUpdate } from "utils/posts"
+import { client } from "utils/api-client"
 interface InputProps {
 
 }
 
+interface Payload {
+  id: number,
+  username: string,
+  userImg: string,
+  tag: string,
+  content: string,
+  image: string | ArrayBuffer
+}
 export function Input() {
   const { user } = useAuth()
-  const queryClient = useQueryClient()
   const [input, setInput] = useState("")
   const [selectedFile, setSelectedFile] = useState<string | ArrayBuffer>("")
   const [showEmojis, setShowEmojis] = useState(false)
   const filePickerRef = useRef<HTMLInputElement>(null)
   const pickerRef = useRef(null)
-  const sendPost = async () => {
-    if (!user) {
-      return
-    }
-    const payload = {
-      id: user.id,
-      username: user.name,
-      userImg: user.avatar,
-      tag: user?.tag,
-      content: input,
-      image: ''
-    }
-    if (selectedFile) {
-      payload.image = selectedFile as string
-    }
-    const res = await window.fetch("/api/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-
-    if (res.ok) {
-      setInput("")
-      setSelectedFile("")
-      setShowEmojis(false)
-    }
-  }
-  const { mutate, isLoading } = useMutation(sendPost, {
-    mutationKey: 'posts',
-    onSuccess: () => queryClient.invalidateQueries('posts')
-  })
-
-
+  const sendPost = async (data: Payload) => await client("/posts", { data })
+  const { mutate, isLoading } = useMutation(sendPost, useAddUpdate('posts'))
   function addImageToPost(e: ChangeEvent<HTMLInputElement>) {
     const reader = new FileReader();
     if (e.target.files?.[0]) {
@@ -75,15 +51,37 @@ export function Input() {
     setShowEmojis(false)
   })
 
+  function fetchPost() {
+    if (!user) {
+      return
+    }
+    const payload = {
+      id: user.id,
+      username: user.name,
+      userImg: user.avatar,
+      tag: user?.tag,
+      content: input,
+      image: selectedFile
+    }
+    mutate(payload, {
+      onSuccess({ code }) {
+        if (code === 0) {
+          setSelectedFile('')
+          setInput('')
+          setShowEmojis(false)
+        }
+      }
+    })
+  }
+
   return (
     <div
       className={`border-b border-gray-700 p-3 flex space-x-3 ${isLoading && "opacity-60"}`}
       style={{ scrollbarWidth: "none" }}
     >
-
       <img className="h-11 w-11 rounded-full cursor-pointer"
-        src={user.avatar}
-        alt={user.name} />
+        src={user?.avatar}
+        alt={user?.name} />
       <div className="w-full divide-y divide-gray-700">
         <div className={``}>
           <textarea
@@ -145,7 +143,7 @@ export function Input() {
           )}
           <button className="text-[#d9d9d9] text-md font-bold hidden ml-auto w-20 h-[32px] rounded-full bg-[#1d9bf0] 
         shadow-md hover:bg-[#1a8cd8] xl:inline items-center justify-center disabled:opacity-50 disabled:cursor-default"
-            onClick={() => mutate()}
+            onClick={fetchPost}
             disabled={!input.trim() && !selectedFile}>Tweet</button>
         </div>
 
