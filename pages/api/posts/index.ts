@@ -65,8 +65,8 @@ export default function handler(
       image: req.body.image,
       username: req.body.username,
       userImg: req.body.userImg,
-      tag: ['@name'],
-      timestamp: '@datetime',
+      tag: req.body.tag,
+      timestamp: req.body.timestamp,
       comments: mock({
         'list|10': [{
           'id|+1': 1000,
